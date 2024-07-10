@@ -435,36 +435,6 @@
          f();
       }, scrollToTop = function() {
          scrollToElement(null);
-      }, loadElements = function(parent) {
-         var a, e, x, i;
-         a = parent.querySelectorAll('iframe[data-src]:not([data-src=""])');
-         for (i = 0; i < a.length; i++) {
-            a[i].contentWindow.location.replace(a[i].dataset.src);
-            a[i].dataset.initialSrc = a[i].dataset.src;
-            a[i].dataset.src = '';
-         }
-         a = parent.querySelectorAll('video[autoplay]');
-         for (i = 0; i < a.length; i++) {
-            if (a[i].paused) a[i].play();
-         }
-         e = parent.querySelector('[data-autofocus="1"]');
-         x = e ? e.tagName : null;
-         switch (x) {
-            case 'FORM':
-                  e = e.querySelector('.field input, .field select, .field textarea');
-                  if (e) e.focus();
-                  break;
-            default:
-                  break;
-         }
-         a = parent.querySelectorAll('deferred-script');
-         for (i = 0; i < a.length; i++) {
-            x = document.createElement('script');
-            x.setAttribute('data-deferred', '');
-            if (a[i].getAttribute('src')) x.setAttribute('src', a[i].getAttribute('src'));
-            if (a[i].textContent) x.textContent = a[i].textContent;
-            a[i].replaceWith(x);
-         }
       };
       window._scrollToTop = scrollToTop;
       var thisUrl = function() {
@@ -655,7 +625,6 @@
                      currentSection.classList.add('inactive');
                      currentSection.classList.remove('active');
                      currentSection.style.display = 'none';
-                     unloadElements(currentSection);
                      resetSectionChangeElements(currentSection);
                      if (header && !hideHeader) {
                         header.style.display = '';
@@ -669,7 +638,6 @@
                      section.classList.add('active');
                      section.style.display = '';
                      trigger('resize');
-                     loadElements(section);
                      if (scrollPoint) scrollToElement(scrollPoint, 'instant');
                      else if (!disableAutoScroll) scrollToElement(null, 'instant');
                      locked = false;
@@ -730,10 +698,7 @@
             ee[k].className = 'inactive';
             ee[k].style.display = 'none';
          }
-         initialSection.classList.add('active');
-         loadElements(initialSection);
-         if (header) loadElements(header);
-         if (footer) loadElements(footer);
+         initialSection.classList.add('active');;
          if (!disableAutoScroll) scrollToElement(null, 'instant');
          on('load', function() {
             if (initialScrollPoint) scrollToElement(initialScrollPoint, 'instant');
